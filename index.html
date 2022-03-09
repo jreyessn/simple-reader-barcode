@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lector</title>
+</head>
+<body>
+    <p style="text-align: center; font-size: 16px;">
+        <strong>Codigo de Barra: </strong>
+        <span class="code"></span>
+    </p>
+
+
+    <script>
+        var selectors = {
+            code: document.querySelector('.code')
+        },
+        data = {
+            lastScannedBarCode: "",
+        },
+        index = {
+            keypress(e){
+                let charCode = (typeof e.which == "number") ? e.which : e.keyCode;
+
+                if (charCode != 13) { // ascii 13 is return key
+                    data.lastScannedBarCode += String.fromCharCode(charCode);
+                } else { // barcode reader indicate code finished with "enter"
+                    let lastCode = data.lastScannedBarCode;
+                    let newNode  = document.createElement("div")
+                        newNode.textContent = lastCode;
+
+                    selectors.code.appendChild(newNode)
+                    data.lastScannedBarCode = ""
+                }   
+            },
+            events(){
+                document.onkeypress = this.keypress;
+            },
+            init(){
+                this.events()
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function(){
+            index.init()
+        })
+
+    </script>
+</body>
+</html>
